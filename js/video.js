@@ -1,87 +1,81 @@
-var video;
+// Utility to simplify the selection of elements.
+const selectElement = selector => document.querySelector(selector);
 
-window.addEventListener("load", function() {
-	console.log("Good job opening the window")
-	video = document.querySelector('#player1');
-	video.autoplay = false;
-	video.loop = false;
-	console.log("Auto play is set to " + video.autoplay);
-	console.log("Loop is set to " + video.loop);
+// Set up references to the DOM elements we'll need.
+const videoElement = selectElement('#player1');
+const volumeIndicator = selectElement("#volume");
+
+// Initializes the video settings.
+const initializeVideo = () => {
+    console.log("Good job opening the window");
+    videoElement.autoplay = false;
+    videoElement.loop = false;
+    console.log(`Auto play is set to ${videoElement.autoplay}`);
+    console.log(`Loop is set to ${videoElement.loop}`);
+};
+
+// Updates the volume display.
+const updateVolumeDisplay = () => {
+    volumeIndicator.textContent = `${videoElement.volume * 100}%`;
+};
+
+// Event listener setup.
+const setupEventListeners = () => {
+    selectElement("#play").addEventListener("click", () => {
+        console.log("Play Video");
+        videoElement.play();
+        updateVolumeDisplay();
+    });
+
+    selectElement('#pause').addEventListener("click", () => {
+        console.log("Pause video");
+        videoElement.pause();
+    });
+
+    selectElement("#slower").addEventListener("click", () => {
+        videoElement.playbackRate *= 0.9;
+        console.log(`Speed is ${videoElement.playbackRate}`);
+    });
+
+    selectElement("#faster").addEventListener("click", () => {
+        videoElement.playbackRate /= 0.9;
+        console.log(`Speed is ${videoElement.playbackRate}`);
+    });
+
+    selectElement("#skip").addEventListener("click", () => {
+        console.log("Skip ahead");
+        videoElement.currentTime += 10;
+        if (videoElement.currentTime >= videoElement.duration) {
+            videoElement.currentTime = 0;
+        }
+        console.log(`Video current time is ${videoElement.currentTime}`);
+    });
+
+    selectElement('#mute').addEventListener('click', function() {
+        videoElement.muted = !videoElement.muted;
+        console.log(videoElement.muted ? "Mute" : "Unmute");
+        this.textContent = videoElement.muted ? "Unmute" : "Mute";
+    });
+
+    selectElement('#slider').addEventListener("input", function() {
+        videoElement.volume = this.value / 100;
+        updateVolumeDisplay();
+        console.log(`The current volume is ${videoElement.volume}`);
+    });
+
+    selectElement('#vintage').addEventListener("click", () => {
+        videoElement.classList.add("oldSchool");
+        console.log("Old school styling");
+    });
+
+    selectElement('#orig').addEventListener("click", () => {
+        videoElement.classList.remove("oldSchool");
+        console.log("Remove old school styling");
+    });
+};
+
+// Initialize the video and set up event listeners on window load.
+window.addEventListener("load", () => {
+    initializeVideo();
+    setupEventListeners();
 });
-
-document.querySelector("#play").addEventListener("click", function() {
-	console.log("Play Video");
-	// one line to play the video
-	video.play();
-	//another line to adjust the volume
-	document.querySelector("#volume").innerHTML = video.volume * 100 + "%";
-	
-});
-
-document.querySelector('#pause').addEventListener("click", function(){
-	console.log("Pause video");
-	video.pause();
-});
-
-document.querySelector("#slower").addEventListener("click", function(){
-	console.log("Slow down");
-	video.playbackRate *= .9;
-	console.log("Speed is " + video.playbackRate);
-
-});
-
-document.querySelector("#faster").addEventListener("click", function(){
-	console.log("Speed up");
-	video.playbackRate /= .9;
-	console.log("Speed is " + video.playbackRate);
-
-});
-
-
-document.querySelector("#skip").addEventListener("click", function(){
-	console.log("Skip ahead");
-	video.currentTime += 10;
-	if (video.currentTime >= video.duration){
-		video.currentTime = 0;
-	}
-	console.log("Video current time is  " + video.currentTime);
-
-});
-
-
-//for mute and unmute we will need an if else
-//there is a mute and unmute javascript function / something we can use to ask if the video is muted or unmuted
-
-document.querySelector('#mute').addEventListener('click', function(){
-	// console.log("The current volume is " + video.volume);
-	if (video.muted == true){
-		video.muted = false;
-		console.log("Unmute");
-		this.textContent = "Mute";
-	}
-	else{
-		video.muted = true;
-		console.log("Mute");
-		this.textContent = "Unmute";
-	}
-	// document.querySelector("#volume").innerHTML = video.volume;
-});
-
-//slider
-document.querySelector('#slider').addEventListener("click", function(){
-	console.log("The current volume is " + video.volume);
-	video.volume = this.value / 100;
-	console.log("The current volume is " + video.volume);
-	document.querySelector('#volume').innerHTML = video.volume * 100 + "%";
-});
-
-document.querySelector('#vintage').addEventListener("click", function(){
-	console.log("Old school styling");
-	video.classList.add("oldSchool");
-});
-
-document.querySelector('#orig').addEventListener("click", function(){
-	console.log("Remove old school styling");
-	video.classList.remove("oldSchool");
-});
-
